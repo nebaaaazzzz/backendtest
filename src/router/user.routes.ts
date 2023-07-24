@@ -31,15 +31,21 @@ export default function (userRouter: Composer<MyContext>) {
     await ctx.reply("This Info is About Us");
   });
   userRouter.callbackQuery("ሀገር", async (ctx) => {
-    await ctx.answerCallbackQuery();
+    try {
+      await ctx.answerCallbackQuery();
+    } catch (err) {}
     await ctx.conversation.enter("insideCountryConversation");
   });
   userRouter.callbackQuery("ውጪ", async (ctx) => {
-    await ctx.answerCallbackQuery();
+    try {
+      await ctx.answerCallbackQuery();
+    } catch (err) {}
     await ctx.conversation.enter("outsideCountryConversation");
   });
   userRouter.callbackQuery("ኩባንያ", async (ctx) => {
-    await ctx.answerCallbackQuery();
+    try {
+      await ctx.answerCallbackQuery();
+    } catch (err) {}
     await ctx.conversation.enter("companyConversation");
   });
 }

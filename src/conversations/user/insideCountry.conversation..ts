@@ -4,7 +4,11 @@ import { buildMessage } from "@src/utils/user/message";
 import { User } from "@src/entity/user";
 import { mainMenu, terminateKeyboard } from "@src/components/keyboards";
 import bot from "@src/config/botConfig";
-import { ADMIN_TELEGRAM_ID } from "@src/config/constants";
+import {
+  ADMIN_TELEGRAM_ID,
+  EmailRegExp,
+  PhoneRegExp,
+} from "@src/config/constants";
 export async function insideCountryConversation(
   conversation: MyConversation,
   ctx: MyContext
@@ -35,8 +39,23 @@ export async function insideCountryConversation(
     await ctx.reply(info, {
       reply_markup: terminateKeyboard,
     });
-    const personalInfoVal = (await conversation.waitFor(":text")).message
-      ?.text as string;
+    let personalInfoVal;
+    if (info === "ስልክ / ሞባይል") {
+      personalInfoVal = (
+        await conversation.waitForHears(PhoneRegExp, async (ctx) => {
+          await ctx.reply("እባክዎ ትክክለኛ ስልክ ቁጥር ያስገቡ");
+        })
+      ).message?.text as string;
+    } else if (info === "ኢሜል") {
+      personalInfoVal = (
+        await conversation.waitForHears(EmailRegExp, async (ctx) => {
+          await ctx.reply("ትክክለኛውን ኢሜይል ያስገቡ");
+        })
+      ).message?.text as string;
+    } else {
+      personalInfoVal = (await conversation.waitFor(":text")).message
+        ?.text as string;
+    }
     personalInfoVals.push(personalInfoVal);
   }
 
@@ -58,10 +77,22 @@ export async function insideCountryConversation(
     await ctx.reply(info, {
       reply_markup: terminateKeyboard,
     });
-    const representativeInfoVal = (await conversation.waitFor(":text")).message
-      ?.text as string;
-    if (representativeInfoVal === "ማቋረጥ") {
-      return;
+    let representativeInfoVal;
+    if (info === "ስልክ / ሞባይል") {
+      representativeInfoVal = (
+        await conversation.waitForHears(PhoneRegExp, async (ctx) => {
+          await ctx.reply("እባክዎ ትክክለኛ ስልክ ቁጥር ያስገቡ");
+        })
+      ).message?.text as string;
+    } else if (info === "ኢሜል") {
+      representativeInfoVal = (
+        await conversation.waitForHears(EmailRegExp, async (ctx) => {
+          await ctx.reply("ትክክለኛውን ኢሜይል ያስገቡ");
+        })
+      ).message?.text as string;
+    } else {
+      representativeInfoVal = (await conversation.waitFor(":text")).message
+        ?.text as string;
     }
     representativeInfoVals.push(representativeInfoVal);
   }
@@ -165,13 +196,13 @@ export async function insideCountryConversation(
         [
           {
             callback_data: "YES",
-            text: "yes",
+            text: "አዎ",
           },
         ],
         [
           {
             callback_data: "NO",
-            text: "No",
+            text: "አይ",
           },
         ],
       ],
@@ -185,13 +216,13 @@ export async function insideCountryConversation(
     const a = new User();
     a.value = toStore;
     await a.save();
+    ctx.reply("በተሳካ ሁኔታ ገብቷል።", {
+      reply_markup: mainMenu,
+    });
     await bot.api.sendMediaGroup(
       ADMIN_TELEGRAM_ID,
       buildMessage(toStore.data, toStore.images)
     );
-    ctx.reply("በተሳካ ሁኔታ ገብቷል።", {
-      reply_markup: mainMenu,
-    });
   } else {
     ctx.reply("ተጥሏል።", {
       reply_markup: mainMenu,

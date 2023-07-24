@@ -10,7 +10,7 @@ import {
 @Entity()
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: string = "";
+  id: string;
 
   @Column({
     type: "json",

@@ -17,3 +17,6 @@ export const TERMS_OF_USE = "Terms of Use";
 /* house types */
 export const SUBMIT = "Submit";
 export const ADMIN = "ADMIN";
+
+export const EmailRegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+export const PhoneRegExp = /^\+?[0-9()\-.\s]+$/;
