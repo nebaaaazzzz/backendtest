@@ -20,6 +20,18 @@ export const terminateKeyboard = new Keyboard([
     },
   ],
 ]).resized(true);
+export const terminateSkipKeyboard = new Keyboard([
+  [
+    {
+      text: "ማቋረጥ",
+    },
+  ],
+  [
+    {
+      text: "ዝለል",
+    },
+  ],
+]).resized(true);
 export const adminKeyboard = new Keyboard([
   [
     {

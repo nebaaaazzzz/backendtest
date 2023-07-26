@@ -24,7 +24,7 @@ async function bootstrap() {
     // getFile return the file path . bot can download max 20MB
     bot.hears("ማቋረጥ", async (ctx) => {
       await ctx.conversation.exit();
-      await ctx.reply("Leaving.", {
+      await ctx.reply("ማቆም.", {
         reply_markup: mainMenu,
       });
     });

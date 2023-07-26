@@ -1,4 +1,8 @@
-import { mainMenu, terminateKeyboard } from "@src/components/keyboards";
+import {
+  mainMenu,
+  terminateKeyboard,
+  terminateSkipKeyboard,
+} from "@src/components/keyboards";
 import bot from "@src/config/botConfig";
 import {
   ADMIN_TELEGRAM_ID,
@@ -30,66 +34,112 @@ export async function outsideCountryConversation(
   let personalInfoVals = [];
   await ctx.reply("በግለሰብ የሚሞላ");
   for await (const info of personalInfo) {
-    await ctx.reply(info, {
-      reply_markup: terminateKeyboard,
-    });
     let personalInfoVal;
-    if (info === "ስልክ / ሞባይል") {
-      personalInfoVal = (
-        await conversation.waitForHears(PhoneRegExp, async (ctx) => {
-          await ctx.reply("እባክዎ ትክክለኛ ስልክ ቁጥር ያስገቡ");
-        })
-      ).message?.text as string;
-    } else if (info === "ኢሜል") {
-      personalInfoVal = (
-        await conversation.waitForHears(EmailRegExp, async (ctx) => {
-          await ctx.reply("ትክክለኛውን ኢሜይል ያስገቡ");
-        })
-      ).message?.text as string;
+    if (info === "ፖ.ሣ.ቁ.  (ካለዎት)") {
+      await ctx.reply(info, {
+        reply_markup: terminateSkipKeyboard,
+      });
+      let res = (await conversation.waitFor(":text")).message?.text;
+      if (res === "ዝለል") {
+        personalInfoVal = "";
+      } else {
+        personalInfoVal = res;
+      }
     } else {
-      personalInfoVal = (await conversation.waitFor(":text")).message
-        ?.text as string;
+      await ctx.reply(info, {
+        reply_markup: terminateKeyboard,
+      });
+      if (info === "ስልክ / ሞባይል") {
+        personalInfoVal = (
+          await conversation.waitForHears(PhoneRegExp, async (ctx) => {
+            await ctx.reply("እባክዎ ትክክለኛ ስልክ ቁጥር ያስገቡ");
+          })
+        ).message?.text as string;
+      } else if (info === "ኢሜል") {
+        personalInfoVal = (
+          await conversation.waitForHears(EmailRegExp, async (ctx) => {
+            await ctx.reply("ትክክለኛውን ኢሜይል ያስገቡ");
+          })
+        ).message?.text as string;
+      } else {
+        personalInfoVal = (await conversation.waitFor(":text")).message
+          ?.text as string;
+      }
     }
     personalInfoVals.push(personalInfoVal);
   }
-  const representative = [
-    "ስም እስከ አያት",
-    "ከተማ",
-    "ክ/ከተማ",
-    "ወረዳ",
-    "ቀበሌ",
-    "የቤት ቁጥር",
-    "ፖ.ሣ.ቁ.  (ካለዎት)",
-    "ስልክ / ሞባይል",
-    "ፋክስ",
-    "ኢሜል",
-  ];
+  await ctx.reply("ተወካይ መረጃ አለ?", {
+    reply_markup: {
+      resize_keyboard: true,
+      keyboard: [
+        [
+          {
+            text: "አዎ",
+          },
+        ],
+        [
+          {
+            text: "አይ",
+          },
+        ],
+      ],
+    },
+  });
+  const isThereRepresentative = (await conversation.waitFor(":text")).message
+    ?.text;
+  let representative: string[] = [];
   let representativeInfoVals = [];
-  await ctx.reply("የግለሰብ ተወካይ መረጃ");
-  for await (const info of representative) {
-    await ctx.reply(info, {
-      reply_markup: terminateKeyboard,
-    });
-    let representativeInfoVal;
-    if (info === "ስልክ / ሞባይል") {
-      representativeInfoVal = (
-        await conversation.waitForHears(PhoneRegExp, async (ctx) => {
-          await ctx.reply("እባክዎ ትክክለኛ ስልክ ቁጥር ያስገቡ");
-        })
-      ).message?.text as string;
-    } else if (info === "ኢሜል") {
-      representativeInfoVal = (
-        await conversation.waitForHears(EmailRegExp, async (ctx) => {
-          await ctx.reply("ትክክለኛውን ኢሜይል ያስገቡ");
-        })
-      ).message?.text as string;
-    } else {
-      representativeInfoVal = (await conversation.waitFor(":text")).message
-        ?.text as string;
-    }
-    representativeInfoVals.push(representativeInfoVal);
-  }
+  if (isThereRepresentative === "አዎ") {
+    representative = [
+      "ስም እስከ አያት",
+      "ከተማ",
+      "ክ/ከተማ",
+      "ወረዳ",
+      "ቀበሌ",
+      "የቤት ቁጥር",
+      "ፖ.ሣ.ቁ.  (ካለዎት)",
+      "ስልክ / ሞባይል",
+      "ፋክስ",
+      "ኢሜል",
+    ];
+    await ctx.reply("የግለሰብ ተወካይ መረጃ");
+    for await (const info of representative) {
+      let representativeInfoVal;
+      if (info === "ፖ.ሣ.ቁ.  (ካለዎት)") {
+        await ctx.reply(info, {
+          reply_markup: terminateSkipKeyboard,
+        });
+        let res = (await conversation.waitFor(":text")).message?.text;
+        if (res === "ዝለል") {
+          representativeInfoVal = "";
+        } else {
+          representativeInfoVal = res;
+        }
+      } else {
+        await ctx.reply(info, {
+          reply_markup: terminateKeyboard,
+        });
+        if (info === "ስልክ / ሞባይል") {
+          representativeInfoVal = (
+            await conversation.waitForHears(PhoneRegExp, async (ctx) => {
+              await ctx.reply("እባክዎ ትክክለኛ ስልክ ቁጥር ያስገቡ");
+            })
+          ).message?.text as string;
+        } else if (info === "ኢሜል") {
+          representativeInfoVal = (
+            await conversation.waitForHears(EmailRegExp, async (ctx) => {
+              await ctx.reply("ትክክለኛውን ኢሜይል ያስገቡ");
+            })
+          ).message?.text as string;
+        } else {
+          representativeInfoVal = (await conversation.waitFor(":text")).message
+            ?.text as string;
+        }
+      }
 
+      representativeInfoVals.push(representativeInfoVal);
+    }
+  }
   let shareBuyInfo = [
     "ቃል የተገባ የአክስዮን ብዛት (በቁጥር)",
     "ቃል የተገባ የአክስዮን ብዛት (በፊደል)",
@@ -99,15 +149,21 @@ export async function outsideCountryConversation(
   await ctx.reply(
     "የአክስዮን ግዥ መረጃዎች \n እያንዳንዱ አክስዮን መሸጫ መደበኛ ዋጋ (Par value) ብር 1000.00 (አንድ ሺህ ብር) ነው"
   );
-  for await (const info of shareBuyInfo) {
-    await ctx.reply(info, {
+  for (const info in shareBuyInfo) {
+    await ctx.reply(shareBuyInfo[info], {
       reply_markup: terminateKeyboard,
     });
-    const shareBuyInfoVal = (await conversation.waitFor(":text")).message
-      ?.text as string;
+    let shareBuyInfoVal: number | string;
+    if (info === "0") {
+      shareBuyInfoVal = await conversation.form.number(async (ctx) => {
+        await ctx.reply("እባክዎ ቁጥር ያስገቡ");
+      });
+    } else {
+      shareBuyInfoVal = (await conversation.waitFor(":text")).message
+        ?.text as string;
+    }
     shareBuyInfoVals.push(shareBuyInfoVal);
   }
-
   await ctx.reply("የአክስዮን ግዥ አከፋፈል ሁኔታ", {
     reply_markup: {
       inline_keyboard: [
