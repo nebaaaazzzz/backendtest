@@ -8,6 +8,11 @@ export const mainMenu = new Keyboard([
   ],
   [
     {
+      text: "የባንክ መረጃ",
+    },
+  ],
+  [
+    {
       text: "ስለ እኛ",
     },
   ],

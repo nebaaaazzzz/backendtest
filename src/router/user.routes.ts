@@ -27,6 +27,11 @@ export default function (userRouter: Composer<MyContext>) {
       reply_markup: selectFormOptionKeyboard,
     });
   });
+  userRouter.hears("የባንክ መረጃ", async (ctx) => {
+    await ctx.reply(`የዳሽን ባንክ ሒሳብ ቁጥር
+    ዋናው ፦ 5185489364011
+    የአገልግሎት ፦ 0185489364011`);
+  });
   userRouter.hears("ስለ እኛ", async (ctx) => {
     await ctx.reply("This Info is About Us");
   });
