@@ -15,12 +15,11 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "noImplicitAny": false,
     "moduleResolution": "Node",
     "skipLibCheck": true,
     "paths": {
-      "@src/*": ["./src/*"],
-      "@routes/*": ["./src/routes/*"],
-      "@middlewares/*": ["./src/middlewares/*"]
+      "@src/*": ["./src/*"]
     }
   },
   "include": ["src/**/*"],

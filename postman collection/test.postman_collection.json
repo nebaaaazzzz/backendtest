@@ -1,0 +1,174 @@
+{
+	"info": {
+		"_postman_id": "0a0197c4-eea1-40be-920e-d7e5c2339667",
+		"name": "test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation UserRegister{\n    register(email : \"nebiyu@gmail.com\" , password :\"123456\")\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/graphql",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation UserRegister{\n    login(email : \"nebiyu@gmail.com\" , password :\"123456\")\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}",
+					"host": [
+						"{{BASE_URL}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "login with 2f enabled",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation UserRegister{\n    login(email : \"nebiyu@gmail.com\" , password :\"123456\" ,oneTimeCode:\"154786\"  )\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}",
+							"host": [
+								"{{BASE_URL}}"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "enable twofactor",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5lYml5dUBnbWFpbC5jb20iLCJzdWIiOiI2NGQ0MzBiNGM4MGI2ODExMDMzNDMwZjUiLCJpYXQiOjE2OTE2Mjc3MDksImV4cCI6MTY5MTYyOTUwOX0.Mywyhuv9T-WB3MVBLXJUenLDaq8XNfJFeg6V_2vu8DI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation EnableTwoFactor{\n    enableTwoFactor\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}?id_user_app=2",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"query": [
+						{
+							"key": "id_user_app",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "change password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation ChangePassword{\n    changePassword(: { email: \"nebiyuf@gmail.com\"; password: '111222'; oldPassword: '123456')\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"query": [
+						{
+							"key": "id_user_app",
+							"value": "2",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

@@ -8,9 +8,7 @@
     },
     "target": "es2020",
     "paths": {
-      "@src/*": ["./src/*"],
-      "@routes/*": ["./src/routes/*"],
-      "@middlewares/*": ["./src/middlewares/*"]
+      "@src/*": ["./src/*"]
     },
     "baseUrl": "."
   },
